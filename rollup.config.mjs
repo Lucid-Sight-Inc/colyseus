@@ -33,8 +33,12 @@ async function getSortedPackages(scope, ignore) {
 async function main() {
 
   // Support --scope and --ignore globs if passed in via commandline
-  const { scope, ignore } = minimist(process.argv.slice(2));
+  let { scope, ignore } = minimist(process.argv.slice(2));
+
+  if (process.env.SCOPE) { scope = process.env.SCOPE; }
+
   const packages = await getSortedPackages(scope, ignore);
+
 
   const configs = packages.map(pkg => {
     // Absolute path to package directory

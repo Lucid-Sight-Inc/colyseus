@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "rollup -c && lerna run build",
+    "build-arena": "SCOPE=@colyseus/arena-hosted rollup -c && npm pack --workspace packages/arena-hosted",
     "clean": "lerna clean",
     "boot": "lerna bootstrap",
     "test": "lerna run test --stream",

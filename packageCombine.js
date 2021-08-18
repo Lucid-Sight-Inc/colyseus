@@ -1,7 +1,7 @@
 "use strict";
 const fs = require('fs')
 
-//Prod location 
+//Prod location
 const path = "app/server/arena/package.json"; //'./server/room/package-json/package.json'
 
 fs.access(path, fs.F_OK, (err) => {
@@ -17,7 +17,7 @@ fs.access(path, fs.F_OK, (err) => {
         return;
 
     }
-  
+
     console.log("Found new package json to merge");
     var orgFile = fs.readFileSync('package.json');
     var newFile = fs.readFileSync(path);
@@ -37,7 +37,7 @@ fs.access(pathNPM, fs.F_OK, (err) => {
         // console.log("No .npmrc file found for deployment");
         return;
     }
-  
+
     console.log("Found custom .npmrc, using for npm install.");
     var npmrcFile = fs.readFileSync(pathNPM);
     fs.writeFileSync('.npmrc', npmrcFile);
@@ -80,6 +80,12 @@ function MergeFile(orgFile, newFile) {
 
         objOrg.dependencies = result;
 
+        //
+        // allow to override "type". use "commonjs" by default.
+        // https://nodejs.org/api/packages.html#packages_type
+        //
+        objOrg.type = objNew.type || "commonjs";
+
         // console.log("Merged results")
         // console.log(result);
 
@@ -98,6 +104,6 @@ function MergeFile(orgFile, newFile) {
         console.error("Failed to parse Package");
         console.error(error);
     }
-    
+
 
 }

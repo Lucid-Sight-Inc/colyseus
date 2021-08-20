@@ -95,7 +95,7 @@
     "prom-client": "^13.2.0",
     "redis": "^3.1.2",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0",
-    "uwebsockets-express": "^1.1.13",
+    "uwebsockets-express": "^1.1.14",
     "winston": "^3.3.3"
   }
 }

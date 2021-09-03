@@ -8,6 +8,8 @@ import { LocalDriver, LocalPresence} from "../bundles/colyseus/src";
 import { RedisPresence } from "../packages/presence/redis-presence/src";
 import { RedisDriver } from "../packages/drivers/redis-driver/src";
 import { uWebSocketsTransport } from "../packages/transport/uwebsockets-transport/src";
+import { WebSocketTransport } from "../packages/transport/ws-transport/src";
+import { createServer } from "http";
 import expressify from "uwebsockets-express";
 
 import * as prometheus from "prom-client";
@@ -135,8 +137,12 @@ StatsController.setPrometheusCounters(globalCCU, totalRoomCount, lockedRoomCount
 const port = Number(PORT || 2567);
 const endpoint = SERVER_URL;
 
+const pingInterval = Number(process.env.PING_INTERVAL || 500);
+const max = Number(process.env.MAX_RETRIES || 2);
+
 // Create HTTP & WebSocket servers
-const transport = new uWebSocketsTransport();
+const app = express();
+const transport = new WebSocketTransport( { server: createServer(app), pingInterval: pingInterval, pingMaxRetries: max });
 
 const gameServer = new Server({
   transport,
@@ -145,7 +151,7 @@ const gameServer = new Server({
   driver: (USE_REDIS != null) ? new RedisDriver({ port: REDIS_PORT, host : USE_REDIS }, API_KEY+"_roomcaches") : new LocalDriver(),
 });
 
-const app = expressify(transport.app);
+// const app = expressify(transport.app);
 app.use(cors());
 
 //If Custom CORS is not set Open to all domains 

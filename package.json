@@ -44,6 +44,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.6.1",
     "@types/sinon": "^10.0.2",
+    "@types/ws": "^7.4.4",
     "all-contributors-cli": "^5.4.0",
     "assert": "^2.0.0",
     "benchmark": "^2.1.1",
@@ -96,6 +97,7 @@
     "redis": "^3.1.2",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0",
     "uwebsockets-express": "^1.1.13",
+    "ws": "^7.4.5",
     "winston": "^3.3.3"
   }
 }

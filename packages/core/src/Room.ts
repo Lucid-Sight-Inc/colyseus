@@ -112,6 +112,8 @@ export abstract class Room<State= any, Metadata= any> {
     });
 
     this.setPatchRate(this.patchRate);
+    // set default _autoDisposeTimeout
+    this.resetAutoDisposeTimeout(this.seatReservationTime);
     StatsController.updateTotalRoomStatsCount(true);
   }
 

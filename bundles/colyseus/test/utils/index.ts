@@ -16,19 +16,19 @@ Server.prototype['getDefaultTransport'] = function (options: ServerOptions) {
   });
 }
 
-// export const DRIVERS = [ LocalDriver, ];
-// export const PRESENCE_IMPLEMENTATIONS = [ LocalPresence, ];
+export const DRIVERS = [ LocalDriver, ];
+export const PRESENCE_IMPLEMENTATIONS = [ LocalPresence, ];
 
-export const DRIVERS = [
-  LocalDriver,
-  RedisDriver,
-  // MongooseDriver,
-];
+// export const DRIVERS = [
+//   LocalDriver,
+//   RedisDriver,
+//   MongooseDriver,
+// ];
 
-export const PRESENCE_IMPLEMENTATIONS = [
-  LocalPresence,
-  RedisPresence
-];
+// export const PRESENCE_IMPLEMENTATIONS = [
+//   LocalPresence,
+//   RedisPresence
+// ];
 
 export class RawClient extends EventEmitter {
   readyState: number;
@@ -115,7 +115,7 @@ export function createDummyClient (seatReservation: matchMaker.SeatReservation, 
 }
 
 export function timeout(ms: number = 200) {
-  return new Promise((resolve, reject) => setTimeout(resolve, ms));
+  return new Promise<void>((resolve, reject) => setTimeout(resolve, ms));
 }
 
 export class DummyRoom extends Room {

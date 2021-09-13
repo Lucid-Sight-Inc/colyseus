@@ -1,9 +1,9 @@
 import assert from "assert";
-import sinon from "sinon";
+import sinon, { match } from "sinon";
 import * as Colyseus from "colyseus.js";
 import { Schema, type, Context } from "@colyseus/schema";
 
-import { matchMaker, Room, Client, Server, ErrorCode } from "@colyseus/core";
+import { matchMaker, Room, Client, Server, ErrorCode, MatchMakerDriver, Presence } from "@colyseus/core";
 import { DummyRoom, DRIVERS, timeout, Room3Clients, PRESENCE_IMPLEMENTATIONS, Room2Clients, Room2ClientsExplicitLock } from "./utils";
 import { ServerError } from "@colyseus/core";
 
@@ -16,22 +16,26 @@ const TEST_ENDPOINT = `ws://localhost:${TEST_PORT}`;
 
 describe("Integration", () => {
   for (let i = 0; i < PRESENCE_IMPLEMENTATIONS.length; i++) {
-    const presence = new PRESENCE_IMPLEMENTATIONS[i]();
-
     for (let j = 0; j < DRIVERS.length; j++) {
-      describe(`Driver => ${DRIVERS[j].name}, Presence => ${presence.constructor.name}`, () => {
-        const driver = new DRIVERS[j]();
-        const server = new Server({
-          presence,
-          driver,
-          // transport: new uWebSocketsTransport(),
-        });
+      describe(`Driver => ${DRIVERS[j].name}, Presence => ${PRESENCE_IMPLEMENTATIONS[i].name}`, () => {
+        let driver: MatchMakerDriver;
+        let server: Server;
+        let presence: Presence;
 
         const client = new Colyseus.Client(TEST_ENDPOINT);
 
         before(async () => {
+          driver = new DRIVERS[j]();
+          presence = new PRESENCE_IMPLEMENTATIONS[i]();
+
+          server = new Server({
+            presence,
+            driver,
+            // transport: new uWebSocketsTransport(),
+          });
+
           // setup matchmaker
-          matchMaker.setup(presence, driver, 'dummyProcessId')
+          matchMaker.setup(presence, driver, 'dummyIntegrationProcessId')
 
           // define a room
           server.define("dummy", DummyRoom);
@@ -56,7 +60,7 @@ describe("Integration", () => {
 
               matchMaker.defineRoomType('oncreate', class _ extends Room {
                 onCreate(options) {
-                  assert.deepEqual({ string: "hello", number: 1 }, options);
+                  assert.deepStrictEqual({ string: "hello", number: 1 }, options);
                   onCreateCalled = true;
                 }
               });
@@ -98,7 +102,7 @@ describe("Integration", () => {
               matchMaker.defineRoomType('onjoin', class _ extends Room {
                 onJoin(client: Client, options: any) {
                   onJoinCalled = true;
-                  assert.deepEqual({ string: "hello", number: 1 }, options);
+                  assert.deepStrictEqual({ string: "hello", number: 1 }, options);
                 }
               });
 
@@ -312,7 +316,7 @@ describe("Integration", () => {
                 onCreate() {
                   this.onMessage("msgtype", (client, message) => {
                     sessionId = client.sessionId;
-                    assert.deepEqual(messageToSend, message);
+                    assert.deepStrictEqual(messageToSend, message);
                     onMessageCalled = true;
                   });
                 }
@@ -352,7 +356,7 @@ describe("Integration", () => {
                   this.onMessage(MessageTypes.REQUEST, (client, message) => {
                     sessionId = client.sessionId;
                     client.send(MessageTypes.RESPONSE, message);
-                    assert.deepEqual(messageToSend, message);
+                    assert.deepStrictEqual(messageToSend, message);
                     onMessageCalled = true;
                   });
                 }
@@ -362,7 +366,7 @@ describe("Integration", () => {
               connection.send(MessageTypes.REQUEST, messageToSend);
 
               connection.onMessage(MessageTypes.RESPONSE, (message) => {
-                assert.deepEqual(messageToSend, message);
+                assert.deepStrictEqual(messageToSend, message);
                 onMessageReceived = true;
               });
 
@@ -487,7 +491,7 @@ describe("Integration", () => {
 
               await timeout(200);
 
-              assert.deepEqual(["one", "one", "one", "three", "three", "three", "two", "two", "two"], messages.sort());
+              assert.deepStrictEqual(["one", "one", "one", "three", "three", "three", "two", "two", "two"], messages.sort());
 
               conn1.leave();
               conn2.leave();
@@ -523,7 +527,7 @@ describe("Integration", () => {
 
               await timeout(200);
 
-              assert.deepEqual(["one", "one", "three", "three", "two", "two"], messages.sort());
+              assert.deepStrictEqual(["one", "one", "three", "three", "two", "two"], messages.sort());
 
               conn1.leave();
               conn2.leave();
@@ -829,7 +833,7 @@ describe("Integration", () => {
               const room = rooms[0];
 
               assert.strictEqual(3, connections.length);
-              assert.deepEqual([room.roomId, room.roomId, room.roomId], connections.map(conn => conn.id));
+              assert.deepStrictEqual([room.roomId, room.roomId, room.roomId], connections.map(conn => conn.id));
 
               assert.strictEqual(1, rooms.length);
               assert.strictEqual(room.roomId, rooms[0].roomId);
@@ -882,6 +886,29 @@ describe("Integration", () => {
 
           })
 
+          describe("Matchmaker queries", () => {
+            const createDummyRooms = async () => {
+              matchMaker.defineRoomType('allroomstest', class _ extends Room {});
+              matchMaker.defineRoomType('allroomstest2', class _ extends Room {});
+              await matchMaker.create("allroomstest");
+              await matchMaker.create("allroomstest2");
+            }
+            it("client.getAvailableRooms() should recieve all rooms when roomName is undefined", async () => {
+              await createDummyRooms();
+              const rooms = await client.getAvailableRooms(undefined);
+              assert.strictEqual(2, rooms.length);
+            });
+            it("client.getAvailableRooms() should recieve the room when roomName is given", async () => {
+              await createDummyRooms();
+              const rooms = await client.getAvailableRooms("allroomstest");
+              assert.strictEqual("allroomstest", rooms[0]["name"]);
+            });
+            it("client.getAvailableRooms() should recieve empty list if no room exists for the given roomName", async () => {
+              await createDummyRooms();
+              const rooms = await client.getAvailableRooms("incorrectRoomName");
+              assert.strictEqual(0, rooms.length);
+            });
+          })
         });
 
         describe("Error handling", () => {

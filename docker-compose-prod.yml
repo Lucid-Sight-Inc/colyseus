@@ -10,3 +10,5 @@ services:
     ports:
       - "2567:2567"
       - "9229:9229"
+    volumes:
+      - ./server/arena:/colyseus/app/server/arena

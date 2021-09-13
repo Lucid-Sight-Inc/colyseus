@@ -159,7 +159,6 @@ if(CUSTOM_CORS === false) {
 }
 
 app.use(express.json());
-app.use(morgan("combined", { "stream": logger.stream }));
 
 app.get('/metrics', async (req, res) => {
 	try {
@@ -173,7 +172,7 @@ app.get('/metrics', async (req, res) => {
 app.get('/metrics/ccu', async (req, res) => {
 	try {
 		res.set('Content-Type', prometheus.register.contentType);
-		res.end(await prometheus.register.getSingleMetricAsString(API_KEY+'_ccu_counter'));
+		res.end(await prometheus.register.getSingleMetricAsString('colyseus_arena_ccu_gauge'));
 	} catch (ex) {
 		res.status(500).end(ex);
 	}
@@ -182,6 +181,8 @@ app.get('/metrics/ccu', async (req, res) => {
 app.get("/healthping", (req, res) => {
   res.json({reply: "pong", timestamp: Date.now});
 });
+
+app.use(morgan("combined", { "stream": logger.stream }));
 
 gameServer.define("lobby", LobbyRoom);
 

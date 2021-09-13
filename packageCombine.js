@@ -13,6 +13,23 @@ fs.access(path, fs.F_OK, (err) => {
         var objOrg = JSON.parse(orgFile);
         objOrg.dependencies["colyseus"]  = "file:./app/bundles/colyseus";
         objOrg.dependencies["@colyseus/core"] = "file:./app/packages/core";
+        objOrg.dependencies["@colyseus/arena"] = "file:./app/packages/arena";
+        // objOrg.dependencies["@colyseus/monitor"] = "file:./app/packages/monitor";
+        //Copy workspace
+        if(objOrg.workspaces !== undefined) {
+            let orgWorkspaces = objOrg.workspaces;
+            let workspaceNew = [];
+            if(orgWorkspaces !== undefined) {
+                console.log("Pointing Org Workspaces");
+                for (let ii = 0; ii < orgWorkspaces.length; ii++) {
+                    const element = orgWorkspaces[ii];
+                    workspaceNew.push("app/server/arena/"+element);              
+                }
+            }
+            objOrg.workspaces = workspaceNew
+        }
+   
+
         fs.writeFileSync('package.json', JSON.stringify(objOrg, null, 4));
         return;
 
@@ -77,6 +94,8 @@ function MergeFile(orgFile, newFile) {
         //Override any Colyseus update
         result["colyseus"] = "file:./app/bundles/colyseus";
         result["@colyseus/core"] = "file:./app/packages/core";
+        result["@colyseus/arena"] = "file:./app/packages/arena";
+        // result["@colyseus/monitor"] = "file:./app/packages/monitor";
 
         objOrg.dependencies = result;
 
@@ -84,7 +103,15 @@ function MergeFile(orgFile, newFile) {
         let orgWorkspaces = objOrg.workspaces;
         let newWorkspaces = objNew.workspaces;
         let workspaceNew = [];
-        
+
+        if(orgWorkspaces !== undefined) {
+            console.log("Adding Org Workspaces");
+            for (let ii = 0; ii < orgWorkspaces.length; ii++) {
+                const element = orgWorkspaces[ii];
+                workspaceNew.push("app/server/arena/"+element);              
+            }
+        }
+
         if(newWorkspaces !== undefined) {
             console.log("Adding New Workspaces");
             for (let ii = 0; ii < newWorkspaces.length; ii++) {
@@ -96,7 +123,7 @@ function MergeFile(orgFile, newFile) {
         if(orgWorkspaces === undefined) {
             objOrg["workspaces"] = workspaceNew;
         } else {
-            objOrg["workspaces"] = orgWorkspaces.concat(workspaceNew);
+            objOrg["workspaces"] = workspaceNew; //orgWorkspaces.concat(workspaceNew);
         }
         
         // console.log("Merged results")
@@ -112,6 +139,8 @@ function MergeFile(orgFile, newFile) {
         var objOrg = JSON.parse(orgFile);
         objOrg.dependencies["colyseus"]  = "file:./app/bundles/colyseus";
         objOrg.dependencies["@colyseus/core"] = "file:./app/packages/core";
+        objOrg.dependencies["@colyseus/arena"] = "file:./app/packages/arena";
+        // objOrg.dependencies["@colyseus/monitor"] = "file:./app/packages/monitor";
         fs.writeFileSync('package.json', JSON.stringify(objOrg, null, 4));
 
         console.error("Failed to parse Package");

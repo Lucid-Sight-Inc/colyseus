@@ -34,7 +34,7 @@ EXPOSE 2567 2222 80
 
 WORKDIR /colyseus
 
-COPY package*.json ./
+COPY package.json ./
 
 RUN lerna init
 

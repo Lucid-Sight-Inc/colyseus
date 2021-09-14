@@ -16,7 +16,6 @@
       "paths": {
         "@colyseus/core": ["packages/core/src"],
         "@colyseus/arena": ["packages/arena/src"],
-        // "@colyseus/monitor": ["packages/monitor/src"],
         "colyseus": ["bundles/colyseus/src"]
       }
 },
@@ -24,7 +23,6 @@
     "server/**/*.ts",
     "server/*.ts",
     "packages/arena/**/*.ts",
-    // "packages/monitor/**/*.ts"
  ],
  "exclude": [
    "node_modules",

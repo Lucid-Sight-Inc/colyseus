@@ -15,9 +15,10 @@ echo "Check / Merge Override Package JSON";
 cd ..
 node packageCombine.js &&
 sleep 5;
-# echo "Adjusting Colyseus SymLinks...";
+
+# echo "Adjusting Colyseus for Arena...";
 # rm -r node_modules/colyseus
-# rm -r node_modules/@colyseus/core
+# rm -r /colyseus/node_modules/@colyseus
 # sleep 5;
 echo "Running NPM Install...";
 npm install --only=production && npm cache clean --force &&

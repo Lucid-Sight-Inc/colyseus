@@ -99,6 +99,7 @@ const APIVERSION = process.env.APIVERSION || "0.14.18-Base";
 const API_KEY = process.env.API_KEY || "LOCALKEY";
 const SERVER_URL = process.env.SERVER_URL || "localhost";
 const CUSTOM_CORS = process.env.CUSTOM_CORS || false;
+const MORGAN_LOGS = process.env.MORGAN_LOGS || false;
 
 //Sets Env for remaining app
 if(process.env.MY_POD_IP && process.env.MY_POD_IP === "useip") {
@@ -182,7 +183,10 @@ app.get("/healthping", (req, res) => {
   res.json({reply: "pong", timestamp: Date.now});
 });
 
-app.use(morgan("combined", { "stream": logger.stream }));
+// Optional displays logs for each connection
+if(MORGAN_LOGS !== false) {
+  app.use(morgan("combined", { "stream": logger.stream }));
+}
 
 gameServer.define("lobby", LobbyRoom);
 

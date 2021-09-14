@@ -21,7 +21,7 @@ exports.default = arena_1.default({
         /**
          * Bind your custom express routes here:
          */
-        app.get("/", (req, res) => {
+        app.get("/test", (req, res) => {
             res.send("It's time to kick ass and chew bubblegum!");
         });
         /**

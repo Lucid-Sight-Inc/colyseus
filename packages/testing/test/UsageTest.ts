@@ -95,14 +95,14 @@ describe("@colyseus/testing", () => {
     const room = await colyseus.createRoom<SimulationState>("room_with_simulation");
     const client = await colyseus.connectTo(room);
 
-    let currentTick = 0;
+    let currentTick = room.state.tick;
     for (let i = 0; i < 5; i++) {
       await room.waitForNextSimulationTick();
       assert.strictEqual(++currentTick, room.state.tick);
     }
 
     await room.waitForNextPatch();
-    assert.strictEqual(currentTick, client.state.tick);
+    assert.strictEqual(room.state.tick, client.state.tick);
   });
 
   it("should disconnect all connected clients after test is done", async () => {

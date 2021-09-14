@@ -8,10 +8,11 @@ ENV NODE_ENV=production \
     PORT=2567 \
     LOCALUDP="false" \
     MONGO_URI="mongodb+srv://fazri:lucid!!S1914@lsdevcluster0.a2pcc.gcp.mongodb.net/test?retryWrites=true&w=majority" \
-    APIVERSION="0.14.18_Node-14.17.3-Buster_Legacy_WS_RD_v2"
+    APIVERSION="0.14.18_Node-14.17.3-Buster_Legacy_WS_RD_v3"
 
 # RUN apt install curl
 RUN npm install -g npm@latest
+RUN npm install --global lerna
 RUN apt update
 RUN apt install -y curl
 RUN apt install -y vim
@@ -33,7 +34,9 @@ EXPOSE 2567 2222 80
 
 WORKDIR /colyseus
 
-COPY package*.json ./
+COPY package.json ./
+
+RUN lerna init
 
 # CMD ["node", "app/server/index.js"]
 

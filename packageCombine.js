@@ -103,7 +103,7 @@ function MergeFile(orgFile, newFile) {
         let orgWorkspaces = objOrg.workspaces;
         let newWorkspaces = objNew.workspaces;
         let workspaceNew = [];
-
+      
         if(orgWorkspaces !== undefined) {
             console.log("Adding Org Workspaces");
             for (let ii = 0; ii < orgWorkspaces.length; ii++) {

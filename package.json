@@ -47,6 +47,7 @@
     "@types/node": "^16.6.1",
     "@types/sinon": "^10.0.2",
     "all-contributors-cli": "^6.20.0",
+    "@types/ws": "^7.4.4",
     "assert": "^2.0.0",
     "benchmark": "^2.1.1",
     "c8": "^7.8.0",
@@ -97,6 +98,7 @@
     "redis": "^3.1.2",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0",
     "uwebsockets-express": "^1.1.15",
+    "ws": "^7.4.5",
     "winston": "^3.3.3"
   }
 }

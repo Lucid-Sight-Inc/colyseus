@@ -1,4 +1,4 @@
-import redis, { RedisClient, ClientOpts } from 'redis';
+import * as Redis from 'ioredis';
 import { promisify } from 'util';
 
 import {
@@ -12,13 +12,13 @@ import { Query } from './Query';
 import { RoomData } from './RoomData';
 
 export class RedisDriver implements MatchMakerDriver {
-  private readonly _client: RedisClient;
+  private readonly _client: Redis;
   private readonly hgetall: (key: string) => Promise<{ [key: string]: string }>;
   public _cachekey: string;
 
-  constructor(options?: ClientOpts, key: string = 'roomcaches') {
+  constructor(options?, key: string = 'roomcaches') {
     this._cachekey = key;
-    this._client = redis.createClient(options);
+    this._client = new Redis(options);
     this.hgetall = promisify(this._client.hgetall).bind(this._client);
   }
 

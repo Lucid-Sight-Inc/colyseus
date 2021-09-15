@@ -1,4 +1,4 @@
-import redis from 'redis';
+import * as Redis from 'ioredis';
 import { promisify } from 'util';
 
 import { Presence } from '@colyseus/core';
@@ -6,8 +6,8 @@ import { Presence } from '@colyseus/core';
 type Callback = (...args: any[]) => void;
 
 export class RedisPresence implements Presence {
-    public sub: redis.RedisClient;
-    public pub: redis.RedisClient;
+    public sub: Redis;
+    public pub: Redis;
 
     protected subscriptions: { [channel: string]: Callback[] } = {};
 
@@ -25,9 +25,9 @@ export class RedisPresence implements Presence {
     
     private prefix: string;
 
-    constructor(opts?: redis.ClientOpts, prefix?: string) {
-        this.sub = redis.createClient(opts);
-        this.pub = redis.createClient(opts);
+    constructor(opts?, prefix?: string) {
+        this.sub = new Redis(opts);
+        this.pub = new Redis(opts);
         this.prefix = (prefix !== undefined) ? prefix : "";
 
         // no listener limit

@@ -1,6 +1,6 @@
 import http from "http";
 import cors from "cors";
-import express from "express";
+import express, { json } from "express";
 import { networkInterfaces } from "os";
 
 import { Server, RelayRoom, LobbyRoom} from "../packages/core/src";
@@ -10,7 +10,7 @@ import { RedisDriver } from "../packages/drivers/redis-driver/src";
 import { uWebSocketsTransport } from "../packages/transport/uwebsockets-transport/src";
 import { WebSocketTransport } from "../packages/transport/ws-transport/src";
 import { createServer } from "http";
-import expressify from "uwebsockets-express";
+import uWebSocketsExpressCompatibility from "uwebsockets-express";
 
 import * as prometheus from "prom-client";
 import * as dotenv from "dotenv";
@@ -22,6 +22,7 @@ const SHOW_ARENA_ERRORS =  Boolean(Number(process.env.SHOW_ARENA_ERRORS || "1" )
 const SHOW_ARENA_ENV =  Boolean(Number(process.env.SHOW_ARENA_ENV || "1" ));
 
 import * as StatsController from '../packages/core/src/controllers/statsController';
+import { stringify } from "querystring";
 //Check to see if we need to load a different file
 let envFilename = (process.env.NODE_ENV === "production") 
     ? "arena.env"
@@ -138,12 +139,44 @@ StatsController.setPrometheusCounters(globalCCU, totalRoomCount, lockedRoomCount
 const port = Number(PORT || 2567);
 const endpoint = SERVER_URL;
 
-const pingInterval = Number(process.env.PING_INTERVAL || 500);
-const max = Number(process.env.MAX_RETRIES || 2);
+let pingInterval = Number(process.env.PING_INTERVAL || 500);
+let max = Number(process.env.MAX_RETRIES || 2);
 
-// Create HTTP & WebSocket servers
-const app = express();
-const transport = new WebSocketTransport( { server: createServer(app), pingInterval: pingInterval, pingMaxRetries: max });
+//Transport Check
+let app: express.Express | undefined = express();
+let server = http.createServer(app);
+let transport = undefined;
+let transportCheck = undefined;
+try {
+  transportCheck = arenaConfig.initializeTransport();
+} catch (error) {
+  // console.error(error);
+  transportCheck = undefined;
+}
+if(transportCheck === undefined || transportCheck["app"]) {
+  if(transportCheck === undefined) {
+    console.log("No Transport provided... Arena is Defaulting to uWS")
+  }
+  // uWS
+  transport = new uWebSocketsTransport();
+  // @ts-ignore
+  server = undefined;
+  // @ts-ignore
+  app = uWebSocketsExpressCompatibility(transport['app']);
+  console.info("✅ uWebSockets.js + Express compatibility enabled");
+} else {
+  // WS
+  if(transportCheck.pingIntervalMS !== undefined) {
+    pingInterval = transportCheck.pingIntervalMS;
+    console.info("User Defined Ping Interval: " + pingInterval);
+  }
+  if(transportCheck.pingMaxRetries !== undefined) {
+    max = transportCheck.pingMaxRetries;
+    console.info("User Defined Ping Max Retries: " + max);
+  }
+  transport = new WebSocketTransport( { server: createServer(app), pingInterval: pingInterval, pingMaxRetries: max });
+  console.info("⭕ Legacy WebSockets + Express enabled");
+}
 
 const gameServer = new Server({
   transport,
@@ -152,7 +185,6 @@ const gameServer = new Server({
   driver: (USE_REDIS != null) ? new RedisDriver({ port: REDIS_PORT, host : USE_REDIS }, API_KEY+"_roomcaches") : new LocalDriver(),
 });
 
-// const app = expressify(transport.app);
 app.use(cors());
 
 //If Custom CORS is not set Open to all domains 
@@ -228,8 +260,6 @@ async function SetupArena() {
     
   }
 }
-
-
 
 gameServer.onShutdown(() => {
   console.log("CUSTOM SHUTDOWN ROUTINE: STARTED");

@@ -11,7 +11,7 @@ fs.access(path, fs.F_OK, (err) => {
         //Update Local Colyseus
         var orgFile = fs.readFileSync('package.json');
         var objOrg = JSON.parse(orgFile);
-        objOrg.dependencies["colyseus"]  = "file:./app/bundles/colyseus";
+        // objOrg.dependencies["colyseus"]  = "file:./app/bundles/colyseus";
         objOrg.dependencies["@colyseus/core"] = "file:./app/packages/core";
         objOrg.dependencies["@colyseus/arena"] = "file:./app/packages/arena";
         // objOrg.dependencies["@colyseus/monitor"] = "file:./app/packages/monitor";
@@ -92,7 +92,7 @@ function MergeFile(orgFile, newFile) {
         }
 
         //Override any Colyseus update
-        result["colyseus"] = "file:./app/bundles/colyseus";
+        // result["colyseus"] = "file:./app/bundles/colyseus";
         result["@colyseus/core"] = "file:./app/packages/core";
         result["@colyseus/arena"] = "file:./app/packages/arena";
         // result["@colyseus/monitor"] = "file:./app/packages/monitor";
@@ -137,7 +137,7 @@ function MergeFile(orgFile, newFile) {
         //Update Local Colyseus
         var orgFile = fs.readFileSync('package.json');
         var objOrg = JSON.parse(orgFile);
-        objOrg.dependencies["colyseus"]  = "file:./app/bundles/colyseus";
+        // objOrg.dependencies["colyseus"]  = "file:./app/bundles/colyseus";
         objOrg.dependencies["@colyseus/core"] = "file:./app/packages/core";
         objOrg.dependencies["@colyseus/arena"] = "file:./app/packages/arena";
         // objOrg.dependencies["@colyseus/monitor"] = "file:./app/packages/monitor";

@@ -84,8 +84,10 @@
   "dependencies": {
     "@colyseus/arena": "^0.14.24",
     "@colyseus/monitor": "^0.14.22",
+    "@colyseus/uwebsockets-transport": "^0.14.26",
+    "@colyseus/ws-transport": "^0.14.21",
     "@colyseus/core": "file:./packages/core",
-    "colyseus": "file:./bundles/colyseus",
+    "colyseus": "0.14.23",
     "@gamestdio/timer": "^1.3.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

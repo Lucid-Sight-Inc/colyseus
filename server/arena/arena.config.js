@@ -5,12 +5,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const arena_1 = __importDefault(require("@colyseus/arena"));
 const monitor_1 = require("@colyseus/monitor");
+const uwebsockets_transport_1 = require("@colyseus/uwebsockets-transport");
+const websockets_transport_1 = require("@colyseus/ws-transport");
 /**
  * Import your Room files
  */
 const MyRoom_1 = require("./rooms/MyRoom");
 exports.default = arena_1.default({
     getId: () => "Your Colyseus App",
+    initializeTransport: () => {
+        return new uwebsockets_transport_1.uWebSocketsTransport({});
+        // return new websockets_transport_1.WebSocketTransport({
+        //     pingInterval: 5000,
+        //     pingMaxRetries: 3,
+        // });
+    },
     initializeGameServer: (gameServer) => {
         /**
          * Define your room handlers:

@@ -17,7 +17,8 @@ services:
     volumes:
       #binding current dir to container directory so you can develop locally
       - .:/colyseus/app/
-      - node_modules:/colyseus/node_modules
+      - notused:/colyseus/node_modules
+      - ./server/arena:/colyseus/app/server/arena
     environment:
       #if you want to override the image env variable
       - NODE_ENV=development
@@ -25,3 +26,6 @@ services:
       # - MONGO_URI=mongodb://host.docker.internal:61001/faznewtest
     labels:
       - "colyseus_server_master"
+
+volumes: 
+  notused:

@@ -12,7 +12,8 @@ else
     echo "'arena.secret.env' does not exist."
 fi
 echo "Running NPM Install...";
-npm install --only=production && npm cache clean --force &&
+npm install nodemon -g
+npm install && npm cache clean --force &&
 sleep 5;
 cd app
 echo "--- Completed Prelaunch ---";

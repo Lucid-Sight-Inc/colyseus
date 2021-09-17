@@ -3,28 +3,29 @@ import cors from "cors";
 import express, { json } from "express";
 import { networkInterfaces } from "os";
 
-import { Server, RelayRoom, LobbyRoom} from "../packages/core/src";
-import { LocalDriver, LocalPresence} from "../bundles/colyseus/src";
-import { RedisPresence } from "../packages/presence/redis-presence/src";
-import { RedisDriver } from "../packages/drivers/redis-driver/src";
-import { uWebSocketsTransport } from "../packages/transport/uwebsockets-transport/src";
-import { WebSocketTransport } from "../packages/transport/ws-transport/src";
+import { Server, RelayRoom, LobbyRoom, LocalDriver, LocalPresence } from "@colyseus/core";
+import { RedisPresence } from "@colyseus/redis-presence";
+import { RedisDriver } from "@colyseus/redis-driver";
+import { uWebSocketsTransport } from "@colyseus/uwebsockets-transport";
+import { WebSocketTransport } from "@colyseus/ws-transport";
+
 import { createServer } from "http";
 import uWebSocketsExpressCompatibility from "uwebsockets-express";
 
 import * as prometheus from "prom-client";
 import * as dotenv from "dotenv";
 import morgan from "morgan";
-//Custom Utilities 
+//Custom Utilities
 import logger from "./utilities/logger";
 
 const SHOW_ARENA_ERRORS =  Boolean(Number(process.env.SHOW_ARENA_ERRORS || "1" ));
 const SHOW_ARENA_ENV =  Boolean(Number(process.env.SHOW_ARENA_ENV || "1" ));
 
-import * as StatsController from '../packages/core/src/controllers/statsController';
+import { StatsController } from '@colyseus/core';
 import { stringify } from "querystring";
+
 //Check to see if we need to load a different file
-let envFilename = (process.env.NODE_ENV === "production") 
+let envFilename = (process.env.NODE_ENV === "production")
     ? "arena.env"
     : process.env.NODE_ENV+".env"
 
@@ -47,7 +48,7 @@ if (envResults.error) {
     if(SHOW_ARENA_ENV) {
       console.log(JSON.stringify(envResults.parsed, null, 4));
     }
-    
+
     //override for NODE_ENV
     if(envResults.parsed.NODE_ENV != null) {
       console.log("NODE_ENV has been overridden to '" + envResults.parsed.NODE_ENV+"'")
@@ -92,9 +93,9 @@ const getLocalExternalIp = () => [].concat.apply([], Object.values(networkInterf
 const PORT = Number(process.env.PORT || 2567);
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://';
 const USE_REDIS = process.env.USE_REDIS || null;
-const REDIS_PORT: number = Number(process.env.REDIS_PORT) || 6379; 
-const USE_PROXY = process.env.USE_PROXY || null; 
-const USE_PROXY_PORT = Number(process.env.USE_PROXY_PORT || 2567); 
+const REDIS_PORT: number = Number(process.env.REDIS_PORT) || 6379;
+const USE_PROXY = process.env.USE_PROXY || null;
+const USE_PROXY_PORT = Number(process.env.USE_PROXY_PORT || 2567);
 const MY_POD_NAMESPACE = process.env.MY_POD_NAMESPACE || undefined;
 const MY_POD_NAME = process.env.MY_POD_NAME || "LOCALPOD";
 const MY_POD_IP = process.env.MY_POD_IP != null ? (process.env.MY_POD_IP === "useip" ? getLocalExternalIp() : process.env.MY_POD_IP) : '0.0.0.0';
@@ -187,7 +188,7 @@ const gameServer = new Server({
 
 app.use(cors());
 
-//If Custom CORS is not set Open to all domains 
+//If Custom CORS is not set Open to all domains
 if(CUSTOM_CORS === false) {
   app.options("/*", function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
@@ -257,7 +258,7 @@ async function SetupArena() {
       logger.error("CRITICAL ERROR: Express Initialize");
       console.error(error);
     }
-    
+
   }
 }
 
@@ -321,11 +322,11 @@ process.once('SIGUSR2', function() {
 async function shutdown() {
     // NOTE: server.close is for express based apps
     // If using hapi, use `server.stop`
-  
+
     //TODO: Add arena hookup here for custom shutdown
-  
+
     // await mongoose.connection.close();
-  
+
     //Shutdown Game Server
     // gameServer.gracefullyShutdown();
 }

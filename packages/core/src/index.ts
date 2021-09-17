@@ -7,6 +7,10 @@ export { Protocol, ErrorCode, getMessageBytes } from './Protocol';
 export { RegisteredHandler } from './matchmaker/RegisteredHandler';
 export { ServerError } from './errors/ServerError';
 
+// Arena
+import * as StatsController from './controllers/statsController';
+export { StatsController };
+
 // MatchMaker
 import * as matchMaker from './MatchMaker';
 export { matchMaker };

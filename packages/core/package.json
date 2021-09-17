@@ -3,7 +3,7 @@
   "version": "0.14.24",
   "description": "Multiplayer Framework for Node.js.",
   "input": "./src/index.ts",
-  "main": "./src/index.js",
+  "main": "./src/index.ts",
   "typings": "./build/index.d.ts",
   "scripts": {
     "tslint": "tslint --project . --config ../../tslint.json"

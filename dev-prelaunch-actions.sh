@@ -27,5 +27,7 @@ npm install && npm cache clean --force &&
 sleep 5;
 cd app
 echo "--- Completed Prelaunch ---";
+echo "--- NPM ROLLUP BUILD ---";
+# npm run watch
 # Hand off to the CMD
 exec "$@"

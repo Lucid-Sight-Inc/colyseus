@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 echo "Importing Secret / Env";
 FILE=/colyseus/app/server/arena/arena.secret.env
 if test -f "$FILE"; then
@@ -11,7 +11,17 @@ if test -f "$FILE"; then
 else 
     echo "'arena.secret.env' does not exist."
 fi
+echo "Check / Merge Override Package JSON";
+cd ..
+node packageCombine.js &&
+sleep 5;
+
+# echo "Adjusting Colyseus for Arena...";
+# rm -r node_modules/colyseus
+# rm -r /colyseus/node_modules/@colyseus
+# sleep 5;
 echo "Running NPM Install...";
+
 npm install nodemon -g
 npm install && npm cache clean --force &&
 sleep 5;

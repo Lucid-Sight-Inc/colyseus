@@ -1,4 +1,4 @@
-import redis, { RedisClient } from 'redis';
+import Redis from 'ioredis';
 const os = require('os');
 // console.log( os.hostname() );
 // console.log( os);
@@ -11,13 +11,13 @@ const DEBUG_REDISPROXY = process.env.DEBUG_REDISPROXY || undefined;
 
 
 let timer: NodeJS.Timeout;
-let client: RedisClient;
+let client: Redis;
 
-export async function initializeProxyRedis(opts?: redis.ClientOpts, sendServerUp?: boolean) {
-    client = redis.createClient(opts);
+export async function initializeProxyRedis(opts?, sendServerUp?: boolean) {
+    client = new Redis(opts);
 
     client.on("connect", () => {
-        // console.log("REDIS Connected");
+        console.log("REDIS Connected");
         if(sendServerUp) {
             this.sendServerStateNotice(true);
         }
@@ -28,7 +28,7 @@ export async function initializeProxyRedis(opts?: redis.ClientOpts, sendServerUp
     });
 
     if(DEBUG_REDISPROXY) {
-        const subscribe = redis.createClient(opts);
+        const subscribe = new Redis(opts);
         subscribe.on("message", function (channel, message) {
             console.log("Message: " + message + " on channel: " + channel + " is arrive!");
         });
@@ -36,7 +36,7 @@ export async function initializeProxyRedis(opts?: redis.ClientOpts, sendServerUp
             console.log("server state listen ready");
         }); 
     
-        const subscribe2 = redis.createClient(opts);
+        const subscribe2 = new Redis(opts);
         subscribe2.on("message", function (channel, message) {
             console.log("Message: " + message + " on channel: " + channel + " is arrive!");
         });

@@ -17,12 +17,13 @@ services:
     volumes:
       #binding current dir to container directory so you can develop locally
       - .:/colyseus/app/
-      - notused:/colyseus/node_modules
-      - ./server/arena:/colyseus/app/server/arena
+      - notused:/colyseus/app/node_modules
+      # - ./server/arena:/colyseus/app/server/arena
     environment:
       #if you want to override the image env variable
       - NODE_ENV=development
       - FORCE_ROOM_RELOAD=true
+      - USE_REDIS=host.docker.internal
       # - MONGO_URI=mongodb://host.docker.internal:61001/faznewtest
     labels:
       - "colyseus_server_master"

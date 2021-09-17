@@ -97,7 +97,7 @@
     "morgan": "^1.10.0",
     "nanoid": "^3.1.25",
     "prom-client": "^13.2.0",
-    "redis": "^3.1.2",
+    "ioredis": "^4.27.9",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0",
     "uwebsockets-express": "^1.1.15",
     "ws": "^7.4.5",

@@ -1,5 +1,5 @@
 import { RoomListingData } from '@colyseus/core';
-import * as Redis from 'ioredis';
+import Redis from 'ioredis';
 
 export class RoomData implements RoomListingData {
   public clients: number = 0;

@@ -10,3 +10,4 @@ src
 media
 *.ppk
 .vscode
+package-lock.json

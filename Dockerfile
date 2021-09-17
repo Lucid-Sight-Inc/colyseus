@@ -47,12 +47,20 @@ ENV NODE_ENV=development \
     LOCALUDP="false" \
     MONGO_URI="mongodb+srv://fazri:lucid!!S1914@lsdevcluster0.a2pcc.gcp.mongodb.net/test?retryWrites=true&w=majority"
 
-ENV PATH=/colyseus/node_modules/.bin:$PATH
+# ENV PATH=/colyseus/node_modules/.bin:$PATH
 
 # RUN npm install
+WORKDIR /colyseus
+COPY packageCombine.js .
 
+RUN npm install \
+    && npm cache clean --force
+
+WORKDIR /colyseus/app
 ENTRYPOINT ["/colyseus/app/dev-prelaunch-actions.sh"]
-CMD ["nodemon","--legacy-watch", "--exec", "ts-node", "--project", "./tsconfig.json",  "--transpile-only", "./server/index.ts", "--inspect=0.0.0.0:9229"]
+
+# 
+CMD ["nodemon","-L", "--exec", "ts-node", "--project", "./tsconfig-arena.json", "--transpile-only", "./server/index.ts", "--inspect=0.0.0.0:9229"]
 
 ## Stage 2 (prod)
 FROM base as prod

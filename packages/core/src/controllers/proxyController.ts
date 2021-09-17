@@ -34,18 +34,18 @@ export async function initializeProxyRedis(opts?, sendServerUp?: boolean) {
         });
         subscribe.subscribe(API_KEY+"_ServerState", (status) => {
             console.log("server state listen ready");
-        }); 
-    
+        });
+
         const subscribe2 = new Redis(opts);
         subscribe2.on("message", function (channel, message) {
             console.log("Message: " + message + " on channel: " + channel + " is arrive!");
         });
         subscribe2.subscribe(API_KEY+"_RoomState", (status) => {
             console.log("room state listen ready");
-        }); 
+        });
     }
 
-    
+
 }
 
 export async function sendServerStateNotice(online: boolean) {

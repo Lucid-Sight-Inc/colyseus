@@ -236,6 +236,12 @@ export function hasHandler(name: string) {
  * Create a room
  */
 export async function createRoom(roomName: string, clientOptions: ClientOptions): Promise<RoomListingData> {
+
+  // Create rooms load balance is handled by Arena Proxy
+  if(USE_PROXY != null) {
+    return await handleCreateRoom(roomName, clientOptions);
+  }
+
   const roomsSpawnedByProcessId = await presence.hgetall(getRoomCountKey());
 
   const processIdWithFewerRooms = (

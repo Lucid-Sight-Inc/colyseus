@@ -8,7 +8,7 @@ ENV NODE_ENV=production \
     PORT=2567 \
     LOCALUDP="false" \
     MONGO_URI="mongodb+srv://fazri:lucid!!S1914@lsdevcluster0.a2pcc.gcp.mongodb.net/test?retryWrites=true&w=majority" \
-    APIVERSION="0.14.18_Node-14.17.3-Buster_uWS_WS_RD_v1"
+    APIVERSION="0.14.18_Node-14.17.3-Buster_uWS_WS_RD_v2"
 
 # RUN apt install curl
 RUN npm install -g npm@latest

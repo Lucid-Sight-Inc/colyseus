@@ -308,8 +308,6 @@ export abstract class Room<State= any, Metadata= any> {
     this.internalState = RoomInternalState.DISCONNECTING;
     await this.listing.remove();
 
-    StatsController.decrementClientCount(this.listing);
-
     this.autoDispose = true;
 
     const delayedDisconnection = new Promise<void>((resolve) =>

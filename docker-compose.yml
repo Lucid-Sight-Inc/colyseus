@@ -6,7 +6,7 @@ services:
     build: 
       context: .
       target: dev
-    image: lucidsightinc/colyseus-k8:dev
+    image: lucidsightinc/colyseus-k8-upd-020222:dev
     ports:
       - target: 2222
         published: 2222

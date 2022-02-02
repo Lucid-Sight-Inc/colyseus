@@ -52,7 +52,7 @@ ENV PATH=/colyseus/node_modules/.bin:$PATH
 # RUN npm install
 
 ENTRYPOINT ["/colyseus/app/dev-prelaunch-actions.sh"]
-CMD ["./node_modules/nodemon/bin/nodemon.js","--legacy-watch", "--exec", "ts-node", "--project", "./tsconfig.json",  "--transpile-only", "./server/index.ts", "--inspect=0.0.0.0:9229"]
+CMD ["nodemon","-L", "--exec", "ts-node", "--project", "./tsconfig.json",  "--transpile-only", "./server/index.ts", "--inspect=0.0.0.0:9229"]
 
 ## Stage 2 (prod)
 FROM base as prod

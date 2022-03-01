@@ -23,10 +23,10 @@
     "server/**/*.ts",
     "server/*.ts",
     "packages/arena/**/*.ts",
+    "packages/monitor/**/*.ts",
  ],
  "exclude": [
    "node_modules",
-   "packages/arena/example",
-   "packages/monitor/"
+   "packages/arena/example"
  ]
 }

@@ -1,14 +1,14 @@
 ## Stage 0 (production base)
 # This gets our prod dependencies installed and out of the way
 # FROM lucidsightinc/node:10.24-alpine as base / node:15-buster / tarampampam/node:10-alpine | tarampampam/node:14-alpine  / 12-alpine
-FROM node:14.17.3-buster as base
+FROM node:16.15.0-buster as base
 
 ENV NODE_ENV=production \
     PORTUDP=2222 \
     PORT=2567 \
     LOCALUDP="false" \
     MONGO_URI="mongodb+srv://fazri:lucid!!S1914@lsdevcluster0.a2pcc.gcp.mongodb.net/test?retryWrites=true&w=majority" \
-    APIVERSION="0.14.18_Node-14.17.3-Buster_uWS_WS_RD_v2"
+    APIVERSION="0.14.18_Node-16.15.0-Buster_uWS_WS_RD_v2"
 
 # RUN apt install curl
 RUN npm install -g npm@latest

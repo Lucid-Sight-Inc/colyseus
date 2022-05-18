@@ -22,11 +22,11 @@
   "include": [
     "server/**/*.ts",
     "server/*.ts",
-    "packages/arena/**/*.ts",
-    "packages/monitor/**/*.ts",
+    "packages/arena/**/*.ts"
  ],
  "exclude": [
    "node_modules",
-   "packages/arena/example"
+   "packages/arena/example",
+   "packages/monitor/",
  ]
 }

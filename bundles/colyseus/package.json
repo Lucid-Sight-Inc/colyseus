@@ -30,7 +30,7 @@
     "node": ">= 14.x"
   },
   "dependencies": {
-    "@colyseus/core": "0.14.20"
+    "@colyseus/core": "file:../packages/core"
   },
   "gitHead": "320a0325f01eff3cd7afa8fb2efa80077ebdbf4a"
 }

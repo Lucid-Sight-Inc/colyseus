@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build-arena-lx": "rm -r dist && tsc -d --project tsconfig-arena.json && npm run copyJSFiles && npm run copyJSFilesSrc && npm run cleanUpBuild",
+    "build-arena-lx-with-mon": "rm -r dist && tsc -d --project tsconfig-arena.json && npm run copyJSFiles && npm run copyJSFilesSrc",
     "build-arena": "rmdir /Q /S dist && tsc -d --project tsconfig-arena.json && npm run copyJSFiles && npm run copyJSFilesSrc",
     "copyJSFiles": "copyfiles -u 1 server/**/*.js  dist/server/",
     "copyJSFilesSrc": "copyfiles -u 1 bundles/**/*.json  dist/bundles/ && copyfiles -u 1 packages/**/*.json  dist/packages/",

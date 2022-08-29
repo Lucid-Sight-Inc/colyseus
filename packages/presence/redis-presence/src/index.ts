@@ -22,7 +22,7 @@ export class RedisPresence implements Presence {
     protected pubsubAsync: any;
     protected incrAsync: any;
     protected decrAsync: any;
-    
+
     private prefix: string;
 
     constructor(opts?: redis.ClientOpts, prefix?: string) {
@@ -180,8 +180,11 @@ export class RedisPresence implements Presence {
 
     public async hincrby(key: string, field: string, value: number) {
         key = this.prefix+key;
-        return new Promise((resolve) => {
-            this.pub.hincrby(key, field, value, resolve);
+        return new Promise<number>((resolve, reject) => {
+          this.pub.hincrby(key, field, value, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+          });
         });
     }
 

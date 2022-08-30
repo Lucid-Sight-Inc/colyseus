@@ -3,7 +3,7 @@
     "rootDir": "..",
 
     "module": "CommonJS",
-    "target": "es2015",
+    "target": "ES2015",
 
     "moduleResolution": "node",
     "lib": ["es6"],

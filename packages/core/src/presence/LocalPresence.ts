@@ -136,7 +136,9 @@ export class LocalPresence implements Presence {
     public hincrby(key: string, field: string, value: number) {
         if (!this.hash[key]) { this.hash[key] = {}; }
         const previousValue = Number(this.hash[key][field] || '0');
-        this.hash[key][field] = (previousValue + value).toString();
+        var incrby = (previousValue + value);
+        this.hash[key][field] = incrby.toString();
+        return incrby;
     }
 
     public async hget(key: string, field: string) {
@@ -162,7 +164,7 @@ export class LocalPresence implements Presence {
             this.keys[key] = 0;
         }
         (this.keys[key] as number)++;
-        return this.keys[key];
+        return this.keys[key] as number;
     }
 
     public async decr(key: string) {
@@ -170,7 +172,7 @@ export class LocalPresence implements Presence {
             this.keys[key] = 0;
         }
         (this.keys[key] as number)--;
-        return this.keys[key];
+        return this.keys[key] as number;
     }
 
     public shutdown() {

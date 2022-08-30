@@ -292,7 +292,7 @@ async function SetupArenaPreListen() {
 }
 
 gameServer.listen(port)
-  .then(() => console.log(`Colyseus ${ APIVERSION }: Listening on ws://${endpoint}:${port}`))
+  .then(() => console.log(`Colyseus ${ APIVERSION }: Listening on wss://${endpoint}`))
   .catch((err) => {
     console.log(err);
     process.exit(1)

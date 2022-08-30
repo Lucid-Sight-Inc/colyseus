@@ -14,4 +14,4 @@ esm
 dump.rdb
 
 dist
-package-lock*
+package-lock.json

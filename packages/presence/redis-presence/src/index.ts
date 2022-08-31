@@ -182,7 +182,7 @@ export class RedisPresence implements Presence {
         key = this.prefix+key;
         return new Promise<number>((resolve, reject) => {
           this.pub.hincrby(key, field, value, (err, result) => {
-            if (err) return reject(err);
+            if (err) { return reject(err); }
             resolve(result);
           });
         });

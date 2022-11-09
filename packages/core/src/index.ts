@@ -39,7 +39,6 @@ export {
   debugDriver,
   debugPresence,
   debugAndPrintError,
-  debugTransport,
 } from './Debug';
 
 // Default rooms

@@ -7,7 +7,6 @@ export const debugError = debug('colyseus:errors');
 export const debugConnection = debug('colyseus:connection');
 export const debugDriver = debug('colyseus:driver');
 export const debugPresence = debug('colyseus:presence');
-export const debugTransport = debug('colyseus:transport');
 
 export const debugAndPrintError = (e: Error | string) => {
   const message = (e instanceof Error) ? e.stack : e;

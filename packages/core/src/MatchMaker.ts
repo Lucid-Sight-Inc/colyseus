@@ -437,13 +437,13 @@ async function cleanupStaleRooms(roomName: string) {
     try {
       // use hardcoded short timeout for cleaning up stale rooms.
       await remoteRoomCall(room.roomId, 'roomId');
+    } catch (e) {
+      debugMatchMaking(`cleaning up stale room '${roomName}', roomId: ${room.roomId}`);
+      room.remove();
       if (USE_PROXY != null) {
         //Broadcast to proxy
         await boradcastRoomIdToProxy(room.roomId, false);
       }
-    } catch (e) {
-      debugMatchMaking(`cleaning up stale room '${roomName}', roomId: ${room.roomId}`);
-      room.remove();
     }
   }));
 }

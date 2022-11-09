@@ -21,10 +21,12 @@ import { Client, ClientState, ISendOptions } from './Transport';
 import { RoomListingData } from './matchmaker/driver';
 
 import * as StatsController from './controllers/statsController';
+import * as ProxyController from './controllers/proxyController';
 
 const DEFAULT_PATCH_RATE = 1000 / 20; // 20fps (50ms)
 const DEFAULT_SIMULATION_INTERVAL = 1000 / 60; // 60fps (16.66ms)
 const noneSerializer = new NoneSerializer();
+const USE_PROXY = process.env.USE_PROXY || null; 
 
 export const DEFAULT_SEAT_RESERVATION_TIME = Number(process.env.COLYSEUS_SEAT_RESERVATION_TIME || 15);
 
@@ -103,6 +105,11 @@ export abstract class Room<State= any, Metadata= any> {
           StatsController.updateLockRoomStatsCount(false);
         }
         StatsController.updateTotalRoomStatsCount(false);
+
+        if(USE_PROXY !== null) {
+          ProxyController.sendRoomStateNotice(this.roomId, false);
+        }
+
         await this._dispose();
 
       } catch (e) {

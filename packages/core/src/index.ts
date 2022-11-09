@@ -39,8 +39,11 @@ export {
   debugDriver,
   debugPresence,
   debugAndPrintError,
+  debugTransport,
 } from './Debug';
 
 // Default rooms
 export { LobbyRoom } from './rooms/LobbyRoom';
 export { RelayRoom } from './rooms/RelayRoom';
+
+export { debugLogs, printLogs } from './Logger';

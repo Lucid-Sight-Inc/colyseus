@@ -12,6 +12,7 @@ import { Presence } from './presence/Presence';
 import { debugAndPrintError, debugMatchMaking } from './Debug';
 import { SeatReservationError } from './errors/SeatReservationError';
 import { ServerError } from './errors/ServerError';
+import { debugLogs } from './Logger';
 
 import { IRoomListingData, MatchMakerDriver, RoomListingData, LocalDriver } from './matchmaker/driver';
 import * as controller from './matchmaker/controller';
@@ -77,12 +78,13 @@ function delay(ms) {
 export async function joinOrCreate(roomName: string, clientOptions: ClientOptions = {}) {
   //TODO: FIX ME NOW!
   await delay(100 + (Math.random() * DELAY_JOIN_MAX)); // wait
-
+  debugLogs(`RoomName ${roomName} clientOptions ${JSON.stringify(clientOptions)}`);
   return await retry<Promise<SeatReservation>>(async () => {
     let room = await findOneRoomAvailable(roomName, clientOptions);
-
+    debugLogs(`Room fouind ${JSON.stringify(room)}`);
     if (!room) {
       room = await createRoom(roomName, clientOptions);
+      debugLogs(`Room created ${JSON.stringify(room)}`);
     }
 
     return await reserveSeatFor(room, clientOptions);
@@ -281,6 +283,7 @@ export async function createRoom(roomName: string, clientOptions: ClientOptions)
 
 async function handleCreateRoom(roomName: string, clientOptions: ClientOptions): Promise<RoomListingData> {
   const registeredHandler = handlers[roomName];
+  debugLogs(`Handle Create Room RoomName: ${roomName}, ClientOptions: ${JSON.stringify(clientOptions)}`);
 
   if (!registeredHandler) {
     throw new ServerError( ErrorCode.MATCHMAKE_NO_HANDLER, `provided room name "${roomName}" not defined`);
@@ -434,7 +437,10 @@ async function cleanupStaleRooms(roomName: string) {
     try {
       // use hardcoded short timeout for cleaning up stale rooms.
       await remoteRoomCall(room.roomId, 'roomId');
-
+      if (USE_PROXY != null) {
+        //Broadcast to proxy
+        await boradcastRoomIdToProxy(room.roomId, false);
+      }
     } catch (e) {
       debugMatchMaking(`cleaning up stale room '${roomName}', roomId: ${room.roomId}`);
       room.remove();

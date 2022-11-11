@@ -22,6 +22,13 @@ sleep 5;
 # sleep 5;
 echo "Running NPM Install...";
 npm install --only=production && npm cache clean --force &&
+echo "Running NPM Link bunldes Colyseus...";
+npm link ./app/bundles/colyseus
+echo "Running NPM Packages Core...";
+npm link ./app/packages/core
+echo "Running NPM Packages Arena...";
+npm link ./app/packages/arena
+
 sleep 5;
 cd app
 echo "--- Completed Prelaunch ---";

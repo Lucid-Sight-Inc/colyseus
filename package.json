@@ -84,7 +84,7 @@
   },
   "dependencies": {
     "@colyseus/arena": "^0.14.24",
-    "@colyseus/core": "file:./packages/core",
+    "@colyseus/core": "file:./app/packages/core",
     "@colyseus/monitor": "^0.14.22",
     "@colyseus/uwebsockets-transport": "^0.14.26",
     "@colyseus/ws-transport": "^0.14.21",

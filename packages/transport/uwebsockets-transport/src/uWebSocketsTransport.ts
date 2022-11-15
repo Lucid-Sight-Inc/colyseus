@@ -2,7 +2,7 @@ import http from 'http';
 import querystring from 'querystring';
 import uWebSockets from 'uWebSockets.js';
 
-import { ErrorCode, matchMaker, Transport, debugAndPrintError, spliceOne } from '@colyseus/core';
+import { ErrorCode, matchMaker, Transport, debugAndPrintError, spliceOne, debugLogs } from '@colyseus/core';
 import { uWebSocketClient, uWebSocketWrapper } from './uWebSocketClient';
 
 export type TransportOptions = Omit<uWebSockets.WebSocketBehavior, "upgrade" | "open" | "pong" | "close" | "message">;
@@ -47,6 +47,7 @@ export class uWebSocketsTransport extends Transport {
                 const headers: {[id: string]: string} = {};
                 req.forEach((key, value) => headers[key] = value);
 
+                debugLogs(`Received WS URL ${req.getUrl()}, Query ${req.getQuery()}, Context ${JSON.stringify(context)}`);
                 /* This immediately calls open handler, you must not use res after this call */
                 /* Spell these correctly */
                 res.upgrade(
@@ -209,11 +210,11 @@ export class uWebSocketsTransport extends Transport {
             const url = req.getUrl();
             const matchedParams = url.match(allowedRoomNameChars);
             const matchmakeIndex = matchedParams.indexOf(matchmakeRoute);
-
+            debugLogs(`App POST HTTP URL ${req.getUrl()}, MatchedParams ${url.match(allowedRoomNameChars)}, MatchMake Route ${matchmakeRoute}, MatchMakeIndex ${matchedParams.indexOf(matchmakeRoute)}`);
             // read json body
             this.readJson(res, async (clientOptions) => {
-                const method = matchedParams[matchmakeIndex + 1];
-                const name = matchedParams[matchmakeIndex + 2] || '';
+                // const method = matchedParams[matchmakeIndex + 1];
+                // const name = matchedParams[matchmakeIndex + 2] || '';
 
                 try {
                     if (clientOptions === undefined) {
@@ -223,6 +224,10 @@ export class uWebSocketsTransport extends Transport {
                     const method = matchedParams[matchmakeIndex + 1];
                     const name = matchedParams[matchmakeIndex + 2] || '';
                     const response = await matchMaker.controller.invokeMethod(method, name, clientOptions);
+                    debugLogs(`\t JSON Body method ${method}, name ${name}, Response Data`);
+                    debugLogs(`\t\t Room.Client ${response?.room?.clients}`);
+                    debugLogs(`\t\t Room.processId ${response?.room?.processId}`);
+                    debugLogs(`\t\t Room.roomId ${response?.room?.roomId}`);
                     if (!res.aborted) {
                       res.writeStatus("200 OK");
                       res.end(JSON.stringify(response));
@@ -253,9 +258,10 @@ export class uWebSocketsTransport extends Transport {
             const url = req.getUrl();
             const matchedParams = url.match(allowedRoomNameChars);
             const roomName = matchedParams.length > 1 ? matchedParams[matchedParams.length - 1] : "";
-
+            debugLogs(`App GET HTTP URL ${url}, MatchedParams ${matchedParams}, RoomName ${roomName}`);
             try {
                 const response = await matchMaker.controller.getAvailableRooms(roomName || '')
+                debugLogs(`\t App GET HTTP GetAvailable Rooms Response ${JSON.stringify(response)}`);
                 if (!res.aborted) {
                   res.writeStatus("200 OK");
                   res.end(JSON.stringify(response));

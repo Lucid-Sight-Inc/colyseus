@@ -71,12 +71,11 @@ WORKDIR /colyseus/app
 COPY dist/. .
 
 WORKDIR /colyseus
-# RUN npm install --only=production \
-#     && npm cache clean --force
+RUN npm install --only=production \
+    && npm cache clean --force
 
 WORKDIR /colyseus/app
 # RUN chown node:node .
 # USER node
 ENTRYPOINT ["/colyseus/prelaunch-actions.sh"]
 CMD ["node", "server/index.js"]
-# CMD ["tail", "-f", "/dev/null"]
